@@ -1,0 +1,3 @@
+/home/hakan/CLionProjects/matrix_transform/build/CMakeFiles/rebuild_cache.dir
+/home/hakan/CLionProjects/matrix_transform/build/CMakeFiles/edit_cache.dir
+/home/hakan/CLionProjects/matrix_transform/build/CMakeFiles/matrix_transform.dir
