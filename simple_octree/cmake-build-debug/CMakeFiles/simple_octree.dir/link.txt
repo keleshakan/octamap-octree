@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/simple_octree.dir/main.cpp.o  -o simple_octree 

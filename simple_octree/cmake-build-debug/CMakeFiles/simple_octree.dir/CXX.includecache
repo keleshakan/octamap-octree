@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/hakan/CLionProjects/simple_octree/Octree.h
+cstddef
+-
+vector
+-
+OctreePoint.h
+/home/hakan/CLionProjects/simple_octree/OctreePoint.h
+
+/home/hakan/CLionProjects/simple_octree/OctreePoint.h
+Vec3.h
+/home/hakan/CLionProjects/simple_octree/Vec3.h
+
+/home/hakan/CLionProjects/simple_octree/Stopwatch.h
+sys/time.h
+-
+windows.h
+-
+
+/home/hakan/CLionProjects/simple_octree/Vec3.h
+cmath
+-
+
+/home/hakan/CLionProjects/simple_octree/main.cpp
+cstdlib
+-
+cstdio
+-
+vector
+-
+Octree.h
+/home/hakan/CLionProjects/simple_octree/Octree.h
+Stopwatch.h
+/home/hakan/CLionProjects/simple_octree/Stopwatch.h
+
