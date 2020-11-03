@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/poison_distribituon.dir/main.cpp.o  -o poison_distribituon 
