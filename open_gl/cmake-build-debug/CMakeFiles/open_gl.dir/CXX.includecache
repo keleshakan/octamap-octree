@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/hakan/CLionProjects/open_gl/main.cpp
+cstdio
+-
+GL/glew.h
+/home/hakan/CLionProjects/open_gl/GL/glew.h
+GLFW/glfw3.h
+/home/hakan/CLionProjects/open_gl/GLFW/glfw3.h
+GL/glut.h
+/home/hakan/CLionProjects/open_gl/GL/glut.h
+cstdlib
+-
+cstring
+-
+
