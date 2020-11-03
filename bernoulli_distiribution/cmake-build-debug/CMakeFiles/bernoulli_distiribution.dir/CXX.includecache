@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/hakan/CLionProjects/bernoulli_distiribution/main.cpp
+iostream
+-
+random
+-
+vector
+-
+fstream
+-
+
