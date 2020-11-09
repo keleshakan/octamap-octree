@@ -5,7 +5,7 @@
 #include <random>
 #include <vector>
 #include <fstream>
-#include "quad.h"
+#include "quadtree.h"
 
 using namespace std;
 
