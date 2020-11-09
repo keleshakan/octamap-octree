@@ -1,218 +1,119 @@
 //
-// Created by hakan on 06/11/2020.
+// Created by hakan on 09/11/2020.
 //
 
-#ifndef BERNOULLI_DISTIRIBUTION_QUAD_H
-#define BERNOULLI_DISTIRIBUTION_QUAD_H
+#ifndef OPEN_GL_QUADTREE_H
+#define OPEN_GL_QUADTREE_H
 
-#include <iostream>
+#include <memory>
 #include <vector>
 
-struct Point
+struct pt2d
 {
-    int x;
-    int y;
-    Point(int _x, int _y)
+    float x = 0.0;
+    float y = 0.0;
+
+    // constructor
+    pt2d(float _cx, float _cy)
     {
-        x = _x;
-        y = _y;
+        x = _cx;
+        y = _cy;
     }
-    Point()
-    {
-        x = 0;
-        y = 0;
+    pt2d(){
+        x = .0;
+        y = .0;
     }
 };
 
-struct Node
+struct BoundaryBox
 {
-    Point pos;
-    int data;
-    Node(Point _pos, int _data)
+    float cx;	// center of the node (x-coordinate)
+    float cy;	// center of the node (y-coordinate)
+    float dim;	// width of the node
+
+    // constructor
+    BoundaryBox(float _cx, float _cy, float _dim)
     {
-        pos = _pos;
-        data = _data;
-    }
-    Node()
-    {
-        data = 0;
+        cx  = _cx;
+        cy  = _cy;
+        dim = _dim;
     }
 };
 
-// The main quadtree class
-class Quad
+class Quadtree
 {
-    // Hold details of the boundary of this node
-    Point topLeft;
-    Point botRight;
+private:
+    // Children nodes
+    Quadtree *northWest;
+    Quadtree *northEast;
+    Quadtree *southWest;
+    Quadtree *southEast;
 
-    // Contains details of node
-    Node *n;
+    // dimensions of the node
+    std::shared_ptr<BoundaryBox> boundary2;
 
-    // Children of this tree
-    Quad *topLeftTree;
-    Quad *topRightTree;
-    Quad *botLeftTree;
-    Quad *botRightTree;
+    // elements in this node
+    std::vector<pt2d> children;
+
+    // minimum amount of pts to split the node
+    unsigned int maxAmtElements = 1;
+
+    // maximum depth of the children nodes
+    int maxDepth = 6;
+
+    // depth of the node (0...root node)
+    int nodeDepth;
+
+    // drawing routine (used by traverse_and_draw)
+    static void colorPick(Quadtree *t, float *depthColor, int depthColorLen);
+
+    // pointer to the parent node
+    Quadtree* parent;
+
+    // auxiliary function used by delete_element()
+    void concatenate_nodes(Quadtree *concat_this_node_maybe);
+
+    // fetch the node in which the given element resides
+    // auxiliary function used by delete_element()
+    Quadtree* fetch_node(pt2d seekPt);
+
+    [[maybe_unused]] void removeChildren();
+
+    void clearNode();
+
+    // clear the tree
+    void clear(Quadtree *t);
 
 public:
-    Quad()
-    {
-        topLeft = Point(0, 0);
-        botRight = Point(1200, 1200);
-        n = nullptr;
-        topLeftTree = nullptr;
-        topRightTree = nullptr;
-        botLeftTree = nullptr;
-        botRightTree = nullptr;
-    }
-    Quad(Point topL, Point botR)
-    {
-        n = nullptr;
-        topLeftTree = nullptr;
-        topRightTree = nullptr;
-        botLeftTree = nullptr;
-        botRightTree = nullptr;
-        topLeft = topL;
-        botRight = botR;
-    }
-    void insert(Node*);
-    Node* search(Point);
-    [[nodiscard]] bool inBoundary(Point) const;
+    // constructor
+    Quadtree(std::shared_ptr<BoundaryBox> BB_init, Quadtree *parent, int _nodeDepth);
+
+    // destructor
+    ~Quadtree();
+
+    // insert a point into the tree
+    bool insert(pt2d insertPt);
+
+    // create four children that fully divide this quad into four quads of equal area
+    void subdivide();
+
+    // draw the tree using OpenGL
+    void traverse_and_draw(Quadtree* t, float widthRootNode);
+
+    // count the nodes of the tree
+    int count_nodes(Quadtree *t);
+
+    // count the elements residing in the tree
+    int count_elements(Quadtree *t);
+
+    // returns all points corresponding to the node in which this point (seekPt) resides
+    [[maybe_unused]] std::vector<pt2d> fetch_points(pt2d seekPt);
+
+    // remove a single element of the tree
+    bool delete_element(pt2d deletePt);
+
+    // relocate a single element of the tree
+    [[maybe_unused]] bool relocate_element(pt2d ptOrigin, pt2d PtMoveTo);
 };
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "readability-misleading-indentation"
-
-// Insert a node into the quadtree
-void Quad::insert(Node *node)
-{
-    if (node == nullptr)
-        return;
-
-    // Current quad cannot contain it
-    if (!inBoundary(node->pos))
-        return;
-
-    if (abs(topLeft.x - botRight.x) <= 1 &&
-        abs(topLeft.y - botRight.y) <= 1)
-    {
-        if (n == nullptr)
-            n = node;
-        return;
-    }
-
-    if ((topLeft.x + botRight.x) / 2 >= node->pos.x)
-    {
-        //topLeftTree
-        if ((topLeft.y + botRight.y) / 2 >= node->pos.y)
-        {
-            if (topLeftTree == nullptr)
-                topLeftTree = new Quad(
-                        Point(topLeft.x, topLeft.y),
-                        Point((topLeft.x + botRight.x) / 2,
-                              (topLeft.y + botRight.y) / 2));
-            topLeftTree->insert(node);
-        }
-
-            //botLeftTree
-        else
-        {
-            if (botLeftTree == nullptr)
-                botLeftTree = new Quad(
-                        Point(topLeft.x,
-                              (topLeft.y + botRight.y) / 2),
-                        Point((topLeft.x + botRight.x) / 2,
-                              botRight.y));
-            botLeftTree->insert(node);
-        }
-    }
-    else
-    {
-        //topRightTree
-        if ((topLeft.y + botRight.y) / 2 >= node->pos.y)
-        {
-            if (topRightTree == nullptr)
-                topRightTree = new Quad(
-                        Point((topLeft.x + botRight.x) / 2,
-                              topLeft.y),
-                        Point(botRight.x,
-                              (topLeft.y + botRight.y) / 2));
-            topRightTree->insert(node);
-        }
-
-            //botRightTree
-        else
-        {
-            if (botRightTree == nullptr)
-                botRightTree = new Quad(
-                        Point((topLeft.x + botRight.x) / 2,
-                              (topLeft.y + botRight.y) / 2),
-                        Point(botRight.x, botRight.y));
-            botRightTree->insert(node);
-        }
-    }
-}
-#pragma clang diagnostic pop
-
-// Find a node in a quadtree
-Node* Quad::search(Point p)
-{
-    if (!inBoundary(p))
-        return nullptr;
-
-    if (n != nullptr)
-        return n;
-
-    if ((topLeft.x + botRight.x) / 2 >= p.x)
-    {
-        // Indicates topLeftTree
-        if ((topLeft.y + botRight.y) / 2 >= p.y)
-        {
-            if (topLeftTree == nullptr){
-                return nullptr;
-            }
-            return topLeftTree->search(p);
-        }
-
-            // Indicates botLeftTree
-        else
-        {
-            if (botLeftTree == nullptr){
-                return nullptr;
-            }
-            return botLeftTree->search(p);
-        }
-    }
-    else
-    {
-        // Indicates topRightTree
-        if ((topLeft.y + botRight.y) / 2 >= p.y)
-        {
-            if (topRightTree == nullptr){
-                return nullptr;
-            }
-            return topRightTree->search(p);
-        }
-
-            // Indicates botRightTree
-        else
-        {
-            if (botRightTree == nullptr){
-                return nullptr;
-            }
-            return botRightTree->search(p);
-        }
-    }
-}
-
-// Check if current quadtree contains the point
-bool Quad::inBoundary(Point p) const
-{
-    return (p.x >= topLeft.x &&
-            p.x <= botRight.x &&
-            p.y >= topLeft.y &&
-            p.y <= botRight.y);
-}
-
-#endif //BERNOULLI_DISTIRIBUTION_QUAD_H
+#endif //OPEN_GL_QUADTREE_H
