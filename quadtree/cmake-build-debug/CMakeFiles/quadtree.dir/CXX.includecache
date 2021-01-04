@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/hakan/CLionProjects/quadtree/Rectangle.h
+
+/home/hakan/CLionProjects/quadtree/main.cpp
+iostream
+-
+point.h
+/home/hakan/CLionProjects/quadtree/point.h
+Rectangle.h
+/home/hakan/CLionProjects/quadtree/Rectangle.h
+quadtree.h
+/home/hakan/CLionProjects/quadtree/quadtree.h
+
+/home/hakan/CLionProjects/quadtree/point.h
+vec.h
+/home/hakan/CLionProjects/quadtree/vec.h
+
+/home/hakan/CLionProjects/quadtree/quadtree.h
+Rectangle.h
+/home/hakan/CLionProjects/quadtree/Rectangle.h
+vec.h
+/home/hakan/CLionProjects/quadtree/vec.h
+
+/home/hakan/CLionProjects/quadtree/vec.h
+cmath
+-
+
