@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/igor_cpp.dir/main.cpp.o  -o igor_cpp 
